@@ -40,7 +40,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('snippets/', include('snippets.urls')),
     path('predict/', include('prediction.urls')),
-    path('imagetotext/', include('imagetotext.urls')),
+    # path('imagetotext/', include('imagetotext.urls')),
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls'))
 ]

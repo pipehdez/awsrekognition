@@ -24,11 +24,9 @@ def detect_text(photo):
 			for text in textDetections:
 				# guarda en un array de objetos
 				obj.append({
-					'DetectedText': text['DetectedText'],
-					'Confidence': "{:.2f}".format(text['Confidence']) + "%",
-					'Id': text['Id'],
-					'Type': text['Type']
+					'DetectedText': text['DetectedText']
 				})
+			texto_arma = ' '.join([word['DetectedText'] for word in obj])
 				# print('Detected text:' + text['DetectedText'])
 				# print('Confidence: ' + "{:.2f}".format(text['Confidence']) + "%")
 				# print('Id: {}'.format(text['Id']))
@@ -36,7 +34,7 @@ def detect_text(photo):
 				# 	print('Parent Id: {}'.format(text['ParentId']))
 				# print('Type:' + text['Type'])
 				# print()
-			return obj
+			return texto_arma
 
 	# session = boto3.Session(profile_name='default')
 	# client = session.client('rekognition')
