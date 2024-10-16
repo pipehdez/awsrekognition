@@ -14,6 +14,17 @@ class OcrAwsViewSet(viewsets.ModelViewSet):
 	serializer_class = OcrAwsSerializer
 	nombre_modulo = 'OcrAws'
 
+	#  def get_permissions(self):
+    #     if self.action in ['create','openDiligenceProcess','saveDiligenceProcess','saveDiligenceAnexoTemp',\
+    #             'getAnexo','getNoRadicado','getCuadro','getLinkObjetivo', 'getContestacionSuperior',\
+    #             'getDocumento','saveSignProcess','getAdjunto','getCertificado', 'saveDiligenceTemp',\
+    #             'contestarNormal','contestarRechazo','contestarVistoBueno','getControlAcceso','list','getFiltros',]:         
+    #         permission_classes = [permissions.AllowAny]
+    #     else:           
+    #         permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
+            
+    #     return [permission() for permission in permission_classes]
+
 	def create(self, request, *args, **kwargs):
 		if request.method == 'POST':
 			try:
