@@ -3,7 +3,7 @@ from django.conf import settings
 
 def detect_text(image_file):	
 	
-	base64_image = base64.b64encode(image_file.read())
+	base64_image = base64.b64encode(image_bytes)
 	imgBase64 = base64.decodebytes(base64_image)
 
 	if imgBase64:
