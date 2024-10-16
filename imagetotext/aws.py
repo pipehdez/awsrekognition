@@ -34,7 +34,7 @@ def detect_text(photo):
 				# 	print('Parent Id: {}'.format(text['ParentId']))
 				# print('Type:' + text['Type'])
 				# print()
-			return texto_arma
+			return {"text": texto_arma, "json": textDetections}
 
 	# session = boto3.Session(profile_name='default')
 	# client = session.client('rekognition')

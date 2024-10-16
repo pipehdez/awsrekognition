@@ -11,9 +11,17 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+environ.Env.read_env(os.path.join(BASE_DIR, os.environ.get('env', '.env')))
+
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
@@ -23,14 +31,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-953djzq2@g@(3^akbai758h1_vduwh6dx-x$bgu&s4j1-3pwh3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 REMOTE_APPS = [
+    'corsheaders',
     'rest_framework',
     'snippets',
 ]
@@ -46,7 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles',    
 ] + REMOTE_APPS + NATIVE_APPS
 
 REST_FRAMEWORK = {
@@ -60,6 +69,7 @@ REST_FRAMEWORK = {
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -144,9 +154,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AWS_STORAGE_BUCKET_NAME = 'imge-rekognition'
-AWS_ACCESS_KEY_ID =  ''
-AWS_SECRET_ACCESS_KEY =  ''
+AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
+AWS_ACCESS_KEY_ID =  os.environ['AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY =  os.environ['AWS_SECRET_ACCESS_KEY']
 AWS_DEFAULT_ACL = "private"
 
 AWS_S3_CUSTOM_DOMAIN = '%s.s3-accelerate.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
@@ -163,9 +173,20 @@ STORAGES = {
     },
 }
 
-AWS_S3_REGION_NAME='us-east-1'
-AWS_S3_SIGNATURE_VERSION='s3v4'
+AWS_S3_REGION_NAME= os.environ['AWS_S3_REGION_NAME']
+AWS_S3_SIGNATURE_VERSION= os.environ['AWS_S3_SIGNATURE_VERSION']
 
-REKOGNITION_REGION_NAME='us-west-1'
-REKOGNITION_ACCESS_KEY_ID=''
-REKOGNITION_SECRET_ACCESS_KEY=''
+REKOGNITION_REGION_NAME= os.environ['AWS_S3_REGION_NAME']
+REKOGNITION_ACCESS_KEY_ID= os.environ['AWS_ACCESS_KEY_ID']
+REKOGNITION_SECRET_ACCESS_KEY= os.environ['AWS_SECRET_ACCESS_KEY']
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS'
+]
