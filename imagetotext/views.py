@@ -38,7 +38,7 @@ class OcrAwsViewSet(viewsets.ModelViewSet):
 				ocrAws.image = image
 				ocrAws.text = textDetections['text']
 				ocrAws.result_json = textDetections['json']
-
+				print('text', textDetections['text'])
 				prompt = os.environ['PROMPT']
 				# ollama respose
 				response = ollama.chat(model='llama3.1', messages=[
