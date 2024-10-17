@@ -5,7 +5,8 @@ from imagetotext.models import OcrAws
 from imagetotext.serializers import OcrAwsSerializer
 from rest_framework import status, viewsets, permissions
 from .aws import detect_text
-import ollama
+from ollama import Client
+# import ollama
 import os
 
 class OcrAwsViewSet(viewsets.ModelViewSet):
@@ -28,6 +29,7 @@ class OcrAwsViewSet(viewsets.ModelViewSet):
 	def create(self, request, *args, **kwargs):
 		if request.method == 'POST':
 			try:
+				client = Client(host='http://localhost:11434')
 				image = request.FILES['image']
 				image.open()	
 				image_bytes = image.read()
@@ -41,7 +43,7 @@ class OcrAwsViewSet(viewsets.ModelViewSet):
 				print('text', textDetections['text'])
 				prompt = os.environ['PROMPT']
 				# ollama respose
-				response = ollama.chat(model='llama3.2:1b', messages=[
+				response = client.chat(model='llama3.2:1b', messages=[
 					{
 						'role': 'user',
 						'content': f"{prompt}:\n{textDetections['text']}",
