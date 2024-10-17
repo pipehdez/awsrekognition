@@ -20,7 +20,8 @@ from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
 from snippets.views import snippet_list
 from imagetotext.views import OcrAwsViewSet
-
+from django.conf.urls.static import static
+from django.conf import settings
 
 # Serializers define the API representation.
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -47,3 +48,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls'))
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

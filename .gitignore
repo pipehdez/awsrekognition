@@ -153,3 +153,6 @@ prediction/*.pyc
 snippets/__pycache__/
 snippets/*.pyc
 # Elastic Beanstalk Files
+
+static/
+staticfiles/
