@@ -8,6 +8,7 @@ from .aws import detect_text
 from ollama import Client
 # import ollama
 import os
+import json
 
 class OcrAwsViewSet(viewsets.ModelViewSet):
 	model = OcrAws
@@ -54,7 +55,7 @@ class OcrAwsViewSet(viewsets.ModelViewSet):
 				ocrAws.questions = response['message']['content']
 				ocrAws.save()
 
-				return Response({'message': 'success', 'data': ocrAws.questions}, status=status.HTTP_201_CREATED)
+				return Response({'message': 'success', 'data': response['message']['content']}, status=status.HTTP_201_CREATED)
 
 			except Exception as e:                
 				raise e
