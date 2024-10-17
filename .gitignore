@@ -156,3 +156,4 @@ snippets/*.pyc
 
 static/
 staticfiles/
+logs/

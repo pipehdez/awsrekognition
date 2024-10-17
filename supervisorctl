@@ -1,0 +1,11 @@
+program:project]
+command=/opt/projects/env/bin/gunicorn --workers 3 awsrekognition.wsgi:application --bind 127.0.0.1:8000
+directory=/opt/projects/awsrekognition
+user=root
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+redirect_stderr=true
+stdout_logfile=/opt/projects/awsrekognition/logs/gunicorn_supervisor.log
+stderr_logfile=/opt/projects/awsrekognition/logs/gunicorn_supervisor_error.log
