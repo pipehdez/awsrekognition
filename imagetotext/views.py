@@ -55,7 +55,7 @@ class OcrAwsViewSet(viewsets.ModelViewSet):
 				ocrAws.questions = response['message']['content']
 				ocrAws.save()
 
-				return Response({'message': 'success', 'data': response['message']['content']}, status=status.HTTP_201_CREATED)
+				return Response({'message': 'success', 'data': json.loads(response['message']['content'])}, status=status.HTTP_201_CREATED)
 
 			except Exception as e:                
 				raise e
