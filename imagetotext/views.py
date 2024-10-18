@@ -47,7 +47,7 @@ class OcrAwsViewSet(viewsets.ModelViewSet):
 				# """
 				languaje = image = request.data['languaje']
 				prompt = """
-					Analiza el siguiente texto: saca las preguntas y datos de formulario en una misma estructura y devuelvelo en una estructura json, ejemplo: [{ question: '', type: '', options: [{ "label": '', "value": '' },]}] puedes incluir firmas y fechas solo si es necesario o se encuentra en el texto, importante: No incluyas ningún texto adicional en tu respuesta, Solo el JSON, Si no puedes determinar el tipo de input, usa "text" por defecto, Asegúrate de que el JSON sea válido y siga exactamente la estructura proporcionada:
+					Analiza el siguiente texto: saca las preguntas y datos de formulario en una misma estructura y devuelvelo en una estructura json y en el idioma """ + languaje + """, ejemplo: [{ question: '', type: '', options: [{ "label": '', "value": '' },]}] puedes incluir firmas y fechas solo si es necesario o se encuentra en el texto, importante: No incluyas ningún texto adicional en tu respuesta, Solo el JSON, Si no puedes determinar el tipo de input, usa "text" por defecto, Asegúrate de que el JSON sea válido y siga exactamente la estructura proporcionada:
 				"""
 				
 				#os.environ['PROMPT']
