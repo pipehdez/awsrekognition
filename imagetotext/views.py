@@ -41,10 +41,11 @@ class OcrAwsViewSet(viewsets.ModelViewSet):
 				ocrAws.image = image
 				ocrAws.text = textDetections['text']
 				ocrAws.result_json = textDetections['json']
-				print('text', textDetections['text'])
+				# print('text', textDetections['text'])
 				# prompt = """
 				# Analiza el siguiente texto y extrae todas las preguntas y datos de formulario en una estructura JSON. El formato debe ser un array de objetos con la siguiente estructura: [{ "question": "", "type": "", "options": [{ "label": "", "value": "" }] }]. Si se menciona o es necesario incluir firmas o fechas, añádelas; de lo contrario, no las incluyas. No devuelvas ningún texto adicional, solo el JSON. Si no puedes identificar el tipo de input, usa 'text' como valor predeterminado. Asegúrate de que el JSON sea válido y siga estrictamente el formato especificado
 				# """
+				languaje = image = request.data['languaje']
 				prompt = """
 					Analiza el siguiente texto: saca las preguntas y datos de formulario en una misma estructura y devuelvelo en una estructura json, ejemplo: [{ question: '', type: '', options: [{ "label": '', "value": '' },]}] puedes incluir firmas y fechas solo si es necesario o se encuentra en el texto, importante: No incluyas ningún texto adicional en tu respuesta, Solo el JSON, Si no puedes determinar el tipo de input, usa "text" por defecto, Asegúrate de que el JSON sea válido y siga exactamente la estructura proporcionada:
 				"""
