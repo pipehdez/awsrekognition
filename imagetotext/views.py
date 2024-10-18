@@ -59,7 +59,7 @@ class OcrAwsViewSet(viewsets.ModelViewSet):
 					},
 				])
 
-				print(str.replace(response['message']['content']))
+				print(response['message']['content'].replace('`', ''))
 				ocrAws.questions = response['message']['content']
 				ocrAws.save()
 
