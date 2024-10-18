@@ -53,7 +53,7 @@ class OcrAwsViewSet(viewsets.ModelViewSet):
 				#os.environ['PROMPT']
 
 				# ollama respose
-				response = client.chat(model='llama3.2:1b', messages=[
+				response = client.chat(model='llama3.1', messages=[
 					{
 						'role': 'user',
 						'content': f"{prompt}:\n{textDetections['text']}",
