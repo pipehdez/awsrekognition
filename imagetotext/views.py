@@ -72,7 +72,7 @@ class OcrAwsViewSet(viewsets.ModelViewSet):
 				response = client.chat(model='llama3.2:1b', messages=[
 					{
 						'role': 'system',
-						'content': 'Eres un bot entrenado para ayudarte a extraer información de textos. Por favor, sigue las instrucciones cuidadosamente.',
+						'content': 'Entrenado para ayudarte a extraer información de textos. Por favor, sigue las instrucciones cuidadosamente.',
 					},
 					{
 						'role': 'user',
