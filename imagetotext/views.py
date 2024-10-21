@@ -47,17 +47,31 @@ class OcrAwsViewSet(viewsets.ModelViewSet):
 				# """
 
 				# Analiza el siguiente texto: saca la comprobación de titulo como el procedureName y saca los conceptos: revisando conforme y datos de formulario en una misma estructura y devuelvelo en una estructura json y en el idioma """ + languaje + """, ejemplo de como debe devolver la estructura: [{ procedureName: 'string', tasks: [{ "taskName": 'string', "done": boolean }]}] , importante: No incluyas ningún texto adicional en tu respuesta, Solo el JSON, Asegúrate de que el JSON sea válido y siga exactamente la estructura proporcionada:
-				languaje = image = request.data['languaje']
-				prompt = """
-					Analiza el siguiente texto: la informacion del este formulario como un objeto json, lo mas importante la lista de tarea en elcuadro con respuesta de si/no en este formato: tasks: [{ "taskName": 'string', "done": boolean }] y el nombre de la comprobacion como procedureName: 'string' el objeto al final debe quedar asi el ejemplo: [{ procedureName: 'string', tasks: [{ "taskName": 'string', "done": boolean }]}] importante: No incluyas ningún texto adicional en tu respuesta, Solo el JSON, Asegúrate de que el JSON sea válido y siga exactamente la estructura proporcionada, y por ultimo el idioma debe ser """ + languaje
+				languaje = request.data['languaje']
+				prompt = f"""
+				Analyze the provided text to extract the report review concepts, where each concept is a value for taskName and the done is a boolean. The visual check will serve as the procedureName. The resulting JSON structure should adhere to the following format: 
+				[{{
+					procedureName: "string", 
+					tasks: [{{
+						"taskName": "string", 
+						"done": boolean }}]
+						}}]. 
+						Ensure that the JSON is valid, follows the exact structure, contains no blank values, and returns all values in {language}. Ensure the JSON is valid and contains no additional text.
+				"""
+				# prompt = """
+				# 	Analiza el siguiente texto: la informacion del este formulario como un objeto json, lo mas importante la lista de tarea en elcuadro con respuesta de si/no en este formato: tasks: [{ "taskName": 'string', "done": boolean }] y el nombre de la comprobacion como procedureName: 'string' el objeto al final debe quedar asi el ejemplo: [{ procedureName: 'string', tasks: [{ "taskName": 'string', "done": boolean }]}] importante: No incluyas ningún texto adicional en tu respuesta, Solo el JSON, Asegúrate de que el JSON sea válido y siga exactamente la estructura proporcionada, y por ultimo el idioma debe ser """ + languaje
 				
 				#os.environ['PROMPT']
 
 				# ollama respose
 				response = client.chat(model='llama3.2:1b', messages=[
 					{
+						'role': 'system',
+						'content': '',
+					},
+					{
 						'role': 'user',
-						'content': f"{prompt}:\n{textDetections['text']}",
+						'content': prompt,
 					},
 				])
 
