@@ -84,12 +84,21 @@ class OcrAwsViewSet(viewsets.ModelViewSet):
 				ocrAws.questions = response['message']['content'].replace('`', '')
 				ocrAws.save()
 
+				content = response['message']['content'].replace('`', '')
+				if content:
+					parsed_data = json.loads(content)
+				else:
+					parsed_data = None
+
 				# data: response json
 				return Response({
 					'message': 'success', 
-					'data': response['message']['content'].replace('`', '')
+					'data': parsed_data
 				}, status=status.HTTP_201_CREATED)
 
 			except Exception as e:                
-				raise e
+				return Response({
+					'message': 'error',
+					'data': 'Invalid JSON format in response content.'
+				}, status=status.HTTP_400_BAD_REQUEST)
     
