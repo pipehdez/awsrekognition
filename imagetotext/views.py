@@ -28,6 +28,7 @@ class OcrAwsViewSet(viewsets.ModelViewSet):
     #     return [permission() for permission in permission_classes]
 
 	def create(self, request, *args, **kwargs):
+		print('request', request.data)
 		if request.method == 'POST':
 			try:
 				client = Client(host='http://localhost:11434')
@@ -41,22 +42,26 @@ class OcrAwsViewSet(viewsets.ModelViewSet):
 				ocrAws.image = image
 				ocrAws.text = textDetections['text']
 				ocrAws.result_json = textDetections['json']
-				# print('text', textDetections['text'])
-				# prompt = """
-				# Analiza el siguiente texto y extrae todas las preguntas y datos de formulario en una estructura JSON. El formato debe ser un array de objetos con la siguiente estructura: [{ "question": "", "type": "", "options": [{ "label": "", "value": "" }] }]. Si se menciona o es necesario incluir firmas o fechas, añádelas; de lo contrario, no las incluyas. No devuelvas ningún texto adicional, solo el JSON. Si no puedes identificar el tipo de input, usa 'text' como valor predeterminado. Asegúrate de que el JSON sea válido y siga estrictamente el formato especificado
-				# """
+				print('text', textDetections['text'])
+				language = request.data['language']
+				# prompt = """Analiza el siguiente texto y extrae todas las preguntas y datos de formulario en una estructura JSON. El formato debe ser un array de objetos con la siguiente estructura: [{ procedureName: 'string', tasks: [{ "taskName": 'string', "done": boolean }]}]. , añádelas; de lo contrario, no las incluyas. No devuelvas ningún texto adicional, solo el JSON. . Asegúrate de que el JSON sea válido y siga estrictamente el formato especificado, los valores deben venir en el idioma """ + language + """."""
 
 				# Analiza el siguiente texto: saca la comprobación de titulo como el procedureName y saca los conceptos: revisando conforme y datos de formulario en una misma estructura y devuelvelo en una estructura json y en el idioma """ + languaje + """, ejemplo de como debe devolver la estructura: [{ procedureName: 'string', tasks: [{ "taskName": 'string', "done": boolean }]}] , importante: No incluyas ningún texto adicional en tu respuesta, Solo el JSON, Asegúrate de que el JSON sea válido y siga exactamente la estructura proporcionada:
-				languaje = request.data['languaje']
 				prompt = f"""
-				Analyze the provided text to extract the report review concepts, where each concept is a value for taskName and the done is a boolean. The visual check will serve as the procedureName. The resulting JSON structure should adhere to the following format: 
+				Analiza el siguiente texto: {textDetections['text']} identifica el encabezado como procedureName y cada punto de la lista de verificación como tasks. Debes devolver un JSON válido, estrictamente en el siguiente formato:
 				[{{
-					procedureName: "string", 
-					tasks: [{{
-						"taskName": "string", 
-						"done": boolean }}]
-						}}]. 
-						Ensure that the JSON is valid, follows the exact structure, contains no blank values, and returns all values in {language}. Ensure the JSON is valid and contains no additional text.
+					"procedureName": "string",
+					"tasks": [
+						{{ 
+							"taskName": "string", "done": false 
+						}}
+					]}}
+					]
+					Donde:
+					procedureName será el encabezado de la sección principal.
+					taskName será cada uno de los elementos de la lista de verificación.
+					El valor done debe ser siempre false.
+					los taskName estaran escritos en {language} y no devuelvas ningún texto adicional fuera de este JSON. Solo devuelve el JSON sin comentarios ni explicaciones.
 				"""
 				# prompt = """
 				# 	Analiza el siguiente texto: la informacion del este formulario como un objeto json, lo mas importante la lista de tarea en elcuadro con respuesta de si/no en este formato: tasks: [{ "taskName": 'string', "done": boolean }] y el nombre de la comprobacion como procedureName: 'string' el objeto al final debe quedar asi el ejemplo: [{ procedureName: 'string', tasks: [{ "taskName": 'string', "done": boolean }]}] importante: No incluyas ningún texto adicional en tu respuesta, Solo el JSON, Asegúrate de que el JSON sea válido y siga exactamente la estructura proporcionada, y por ultimo el idioma debe ser """ + languaje
@@ -67,7 +72,7 @@ class OcrAwsViewSet(viewsets.ModelViewSet):
 				response = client.chat(model='llama3.2:1b', messages=[
 					{
 						'role': 'system',
-						'content': '',
+						'content': 'Eres un bot entrenado para ayudarte a extraer información de textos. Por favor, sigue las instrucciones cuidadosamente.',
 					},
 					{
 						'role': 'user',
@@ -76,13 +81,13 @@ class OcrAwsViewSet(viewsets.ModelViewSet):
 				])
 
 				print(response['message']['content'].replace('`', ''))
-				ocrAws.questions = response['message']['content']
+				ocrAws.questions = response['message']['content'].replace('`', '')
 				ocrAws.save()
 
 				# data: response json
 				return Response({
 					'message': 'success', 
-					'data': json.loads(response['message']['content'].replace('`', ''))
+					'data': response['message']['content'].replace('`', '')
 				}, status=status.HTTP_201_CREATED)
 
 			except Exception as e:                
